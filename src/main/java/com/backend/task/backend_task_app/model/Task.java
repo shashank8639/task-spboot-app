@@ -1,5 +1,6 @@
 package com.backend.task.backend_task_app.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,10 +22,12 @@ public class Task {
 	private String assignedTo;
 
 	// Track if task is marked completed by the user
-	private boolean isCompleted = false;
+	@Column(nullable = false)
+	private boolean isCompleted;
 
 	// Track if the admin has confirmed the completion
-	private boolean isConfirmed = false;
+	@Column(nullable = false)
+	private boolean isConfirmed;
 
 	@ManyToOne
 	@JoinColumn(name = "created_by_id", nullable = false)

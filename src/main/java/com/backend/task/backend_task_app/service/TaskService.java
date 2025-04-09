@@ -65,17 +65,7 @@ public class TaskService {
     }
 
     // Update task completion status
-    public Task updateTask(Long taskId, TaskUpdateDTO updateDTO, boolean isAdmin) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-
-        if (isAdmin) {
-            // Admin confirms the completion
-            task.setConfirmed(updateDTO.isConfirmed());
-        } else {
-            // Normal user marks task as completed
-            task.setCompleted(updateDTO.isCompleted());
-        }
+    public Task updateTask( Task task) {
 
         return taskRepository.save(task);
     }
@@ -99,6 +89,10 @@ public class TaskService {
         }
         return false;
     }
+
+	public List<Task> getCompletedTasks() {
+		return taskRepository.findByIsCompletedTrueAndIsConfirmedTrue();
+	}
 }
 
 

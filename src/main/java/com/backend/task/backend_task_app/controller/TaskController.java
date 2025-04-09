@@ -12,6 +12,7 @@ import com.backend.task.backend_task_app.model.Task;
 import com.backend.task.backend_task_app.service.TaskService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -80,20 +81,31 @@ public class TaskController {
         List<Task> tasks = taskService.getPendingTasks();
         return ResponseEntity.ok(tasks);
     }
+    
+    // Get completed tasks (Admin only)
+    @GetMapping("/completed")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Task>> getCompletedTasks() {
+        List<Task> tasks = taskService.getCompletedTasks();
+        return ResponseEntity.ok(tasks);
+    }
 
     // Update task status (Admin confirms completion)
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<Task> updateTask(
-            @PathVariable Long id,
-            @RequestBody TaskUpdateDTO updateDTO) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        Task task = taskService.getTaskById(id)
+            .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        if (updates.containsKey("completed")) {
+            task.setCompleted((Boolean) updates.get("completed"));
+        }
+        if (updates.containsKey("confirmed")) {
+            task.setConfirmed((Boolean) updates.get("confirmed"));
+        }
 
-        Task updatedTask = taskService.updateTask(id, updateDTO, isAdmin);
-        return ResponseEntity.ok(updatedTask);
+        taskService.updateTask(task);
+        return ResponseEntity.ok(task);
     }
     
     @DeleteMapping("/remove/id/{id}")

@@ -12,4 +12,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // Find all tasks pending confirmation
     List<Task> findByIsCompletedTrueAndIsConfirmedFalse();
+
+ // Find all tasks which are completed
+	List<Task> findByIsCompletedTrueAndIsConfirmedTrue();
 }
