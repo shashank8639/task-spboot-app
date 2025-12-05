@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: backend-task-app
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    region: oregon
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: backend-mysql-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: backend-mysql-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: backend-mysql-db
+          property: password
+      - key: SERVER_PORT
+        value: "8080"
+
+databases:
+  - name: backend-mysql-db
+    plan: free
+    region: oregon
+    databaseName: fullstack_taskapp
+    user: task_user

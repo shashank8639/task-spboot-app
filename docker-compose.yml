@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: taskapp-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: fullstack_taskapp
+      MYSQL_ROOT_PASSWORD: root   # root password
+    ports:
+      - "3307:3306"   # host:container
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: .
+    container_name: backend-task-app
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/fullstack_taskapp?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+volumes:
+  mysql_data:
