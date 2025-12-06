@@ -78,9 +78,14 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("https://react-frontend-seven.vercel.app");  // using real Vercel URL
+
+        // Real Vercel domains (all of them)
         config.addAllowedOrigin("https://react-frontend-eight-dusky.vercel.app");
-        config.addAllowedOrigin("http://localhost:5173"); // keep for development
+        config.addAllowedOrigin("https://react-frontend-git-main-mbajibabus-projects.vercel.app");
+        config.addAllowedOrigin("https://react-frontend-7umcttg6b-mbajibabus-projects.vercel.app");
+
+        // Local development
+        config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
