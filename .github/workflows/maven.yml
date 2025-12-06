@@ -22,4 +22,5 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B -DskipTests clean install
+
