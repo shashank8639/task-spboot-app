@@ -50,7 +50,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow all
 																											// OPTIONS
 																											// requests
-						.requestMatchers("/api/auth/**", "/api/register", "/error").permitAll()
+						.requestMatchers("/api/auth/**", "/api/register", "/error","/health").permitAll()
 						.anyRequest()
 						.authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
