@@ -6,7 +6,7 @@ services:
     autoDeploy: true
     region: oregon
     branch: master
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: DB_URL
         fromDatabase:
