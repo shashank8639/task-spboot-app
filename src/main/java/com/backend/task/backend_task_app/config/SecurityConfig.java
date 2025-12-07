@@ -80,9 +80,10 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         // Real Vercel domains (all of them)
-        config.addAllowedOrigin("https://react-frontend-eight-dusky.vercel.app");
-        config.addAllowedOrigin("https://react-frontend-git-main-mbajibabus-projects.vercel.app");
-        config.addAllowedOrigin("https://react-frontend-7umcttg6b-mbajibabus-projects.vercel.app");
+        config.addAllowedOrigin("https://task-reactapp-nine.vercel.app");
+
+        // Optional: Allow other possible Vercel preview deployments
+        config.addAllowedOriginPattern("https://*.vercel.app");
 
         // Local development
         config.addAllowedOrigin("http://localhost:5173");
