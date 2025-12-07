@@ -27,6 +27,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			""", nativeQuery = true)
 	List<Object[]> findByUsernameWithRoles(@Param("username") String username);
 	
+	@Query("SELECT u FROM User u WHERE :role NOT MEMBER OF u.roles")
+    List<User> findUsersWithoutRole(@Param("role") Role role);
+	
 	default Optional<User> findByUsernameWithRolesNative(String username) {
         List<Object[]> results = findByUsernameWithRoles(username);
         

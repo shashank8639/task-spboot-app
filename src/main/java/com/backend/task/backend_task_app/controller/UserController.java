@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.task.backend_task_app.dto.UserRequest;
 import com.backend.task.backend_task_app.model.Role;
 import com.backend.task.backend_task_app.model.User;
+import com.backend.task.backend_task_app.repository.RoleRepository;
 import com.backend.task.backend_task_app.repository.UserRepository;
 import com.backend.task.backend_task_app.service.UserService;
 
@@ -35,11 +36,13 @@ public class UserController {
 
 	private final UserService userService;
 	private UserRepository userRepository;
-
+	private RoleRepository roleRepository;
+	
 	@Autowired
-	public UserController(UserService userService, UserRepository userRepository) {
+	public UserController(UserService userService, UserRepository userRepository, RoleRepository roleRepository) {
 		this.userService = userService;
 		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
 	}
 	
 	 @GetMapping("/current")
@@ -64,6 +67,30 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public User getUserByUsername(@RequestParam String username) {
 		return userService.getUserByUsername(username);
+	}
+	@GetMapping("/users/unassigned")
+	public ResponseEntity<?> getUsersWithoutRoleUser() {
+	    Optional<Role> roleUserOpt = roleRepository.findByRoleName("ROLE_USER");
+
+	    if (roleUserOpt.isEmpty()) {
+	        return ResponseEntity.badRequest().body("ROLE_USER not found");
+	    }
+
+	    Role roleUser = roleUserOpt.get();
+	    List<User> users = userRepository.findUsersWithoutRole(roleUser);
+
+	    // Build a list of user details with roles
+	    List<Map<String, Object>> result = users.stream().map(u -> {
+	        Map<String, Object> map = new HashMap<>();
+	        map.put("id", u.getId());
+	        map.put("username", u.getUsername());
+	        map.put("roles", u.getRoles().stream()
+	                .map(Role::getRoleName)
+	                .collect(Collectors.toList())); // include roles here
+	        return map;
+	    }).collect(Collectors.toList());
+
+	    return ResponseEntity.ok(result);
 	}
 	
 	@GetMapping("/user/me")
