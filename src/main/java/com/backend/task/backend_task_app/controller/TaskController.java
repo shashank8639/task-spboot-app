@@ -14,6 +14,7 @@ import com.backend.task.backend_task_app.service.TaskService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -72,6 +73,30 @@ public class TaskController {
         String username = auth.getName();
         List<Task> tasks = taskService.getUserTasks(username);
         return ResponseEntity.ok(tasks);
+    }
+    
+    @GetMapping("/user/pending")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<List<Task>> getUserPendingTasks() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        List<Task> pendingTasks = taskService.getUserTasks(username);
+        pendingTasks = pendingTasks.stream()
+        		.filter(task -> !task.isCompleted())
+        		.collect(Collectors.toList());
+        return ResponseEntity.ok(pendingTasks);
+    }
+    
+    @GetMapping("/user/completed")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<List<Task>> getUserCompletedTasks() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        List<Task> completedTasks = taskService.getUserTasks(username);
+        completedTasks = completedTasks.stream()
+        		.filter(task -> task.isCompleted())
+        		.collect(Collectors.toList());
+        return ResponseEntity.ok(completedTasks);
     }
 
     // Get pending confirmation tasks (Admin only)
