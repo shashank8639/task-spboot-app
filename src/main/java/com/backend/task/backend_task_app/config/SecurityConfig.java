@@ -80,7 +80,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         // Real Vercel domains (all of them)
-        config.addAllowedOrigin("https://task-reactapp-nine.vercel.app");
+        config.addAllowedOrigin("https://simpletaskappreact1.vercel.app");
 
         // Optional: Allow other possible Vercel preview deployments
         config.addAllowedOriginPattern("https://*.vercel.app");
